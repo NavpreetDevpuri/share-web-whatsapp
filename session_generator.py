@@ -23,7 +23,9 @@ sleep(5)
 
 session = driver.execute_script("return window.localStorage;")
 
-with open(path.join("sessions", sessionName), "w") as sessionFile:
+with open(path.join("sessions", sessionName), "w", encoding="utf-8") as sessionFile:
     sessionFile.write(str(session))
+
+print("Your session file is saved to: " + path.join("sessions", sessionName))
 
 driver.close()

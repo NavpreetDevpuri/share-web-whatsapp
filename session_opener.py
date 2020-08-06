@@ -18,7 +18,7 @@ print("Injecting session...")
 
 session = None
 
-with open(path.join("sessions", sessionName), "r") as sessionFile:
+with open(path.join("sessions", sessionName), "r", encoding="utf-8") as sessionFile:
     session = eval(sessionFile.read())
 
 driver.execute_script(
