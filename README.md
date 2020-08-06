@@ -16,6 +16,6 @@ Python script to share web WhatsApp's session files so another person can open w
 
 # To open web whatsapp from generated session file
 
-1. Put that session file to folder `sessions` or provide direct link to that file while running script.
+1. If you want to give only file name as argument then put it to same directory as python script or put that session file to folder `sessions` or provide direct link to that file while running script.
 2. Run `session_opener.py` with/without a argument for session file name for example `python session_generator.py "Name of session file"` and if you run it without session file name argument then it will try default file "00"
 3. It will open web whatsapp session.

@@ -1,13 +1,29 @@
 from selenium import webdriver
 from time import sleep
 import sys
-from os import path, listdir
 import os
 
 sessionFileName = "00"
 
 if len(sys.argv) == 2:
     sessionFileName = sys.argv[1]
+
+session = None
+
+possible_paths = [os.path.join("sessions", sessionFileName), sessionFileName]
+possibleSessionFilePath = ""
+for path in possible_paths:
+    if os.path.exists(path):
+        possibleSessionFilePath = path
+
+if possibleSessionFilePath == "":
+    raise IOError('"' + sessionFileName + '" is not exist.')
+
+with open(possibleSessionFilePath, "r", encoding="utf-8") as sessionFile:
+    try:
+        session = eval(sessionFile.read())
+    except:
+        raise IOError('"' + possibleSessionFilePath + '" is invalid file.')
 
 driver = webdriver.Chrome("./chromedriver")
 
@@ -16,20 +32,6 @@ driver.get("https://web.whatsapp.com/")
 sleep(1)
 
 print("Injecting session...")
-
-session = None
-
-possible_paths = [path.join("sessions", sessionFileName), sessionFileName]
-possibleSessionFilePath = ""
-for path in possible_paths:
-    if path.exists(path):
-        possibleSessionFilePath = path
-
-if possibleSessionFilePath == "":
-    raise IOError(sessionFileName + " is not exist.")
-
-with open(possibleSessionFilePath, "r", encoding="utf-8") as sessionFile:
-    session = eval(sessionFile.read())
 
 driver.execute_script(
     """
