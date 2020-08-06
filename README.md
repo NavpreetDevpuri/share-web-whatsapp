@@ -11,7 +11,7 @@ Python script to share web WhatsApp's session files so another person can open w
 # To generate session file
 
 1. Run `session_generator.py` with/without a argument for session file name for example `python session_generator.py "Name of session file"` and if you run it without session file name argument then it will name files with increasing numerically.
-2. Scan QR code and wait for windows to close.
+2. Scan QR code and wait for window to close.
 3. Share generated session file.
 
 # To open web whatsapp from generated session file
