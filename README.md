@@ -1,4 +1,4 @@
-# share-web-whatsapp
+# share-web-whatsapp (SWW)
 
 Python script to share web WhatsApp's session files so another person can open web WhatsApp using shared session files without scanning QR code.
 
