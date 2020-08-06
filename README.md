@@ -4,7 +4,7 @@ Python script to share web WhatsApp's session files so another person can open w
 
 # How to use
 
-1. Install selenium by `pip install selenium`.
+1. Install selenium by `pip install selenium` OR `pip install -r requirements.txt`.
 2. Setup python selenium chromedriver, I suggest google it according to your OS.
 3. Run Python scripts as explains follow.
 
