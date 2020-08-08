@@ -43,5 +43,5 @@ for(i=0;i<keys.length;++i) window.localStorage.setItem(keys[i], values[i]);
 )
 
 driver.refresh()
-input("Enter any key to exit.")
+input("Enter enter to exit.")
 driver.close()
