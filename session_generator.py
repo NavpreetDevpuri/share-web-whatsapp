@@ -5,10 +5,12 @@ from os import listdir, path, makedirs
 
 makedirs("sessions", exist_ok=True)
 
-sessionFileName = "%02d" % (len(listdir("sessions")))
+sessionFileName = "%02d" % (len(listdir("sessions"))) + ".wa"
 
 if len(sys.argv) == 2:
-    sessionFileName = sys.argv[1]
+    sessionFileName = sys.argv[1] + ".wa"
+    if sessionFileName[-3:] != ".wa":
+        sessionFileName += ".wa"
 
 driver = webdriver.Chrome("./chromedriver")
 

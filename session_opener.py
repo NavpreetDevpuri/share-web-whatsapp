@@ -3,10 +3,12 @@ from time import sleep
 import sys
 import os
 
-sessionFileName = "00"
+sessionFileName = "00.wa"
 
 if len(sys.argv) == 2:
     sessionFileName = sys.argv[1]
+    if sessionFileName[-3:] != ".wa":
+        sessionFileName += ".wa"
 
 session = None
 
@@ -15,6 +17,7 @@ possibleSessionFilePath = ""
 for path in possible_paths:
     if os.path.exists(path):
         possibleSessionFilePath = path
+    
 
 if possibleSessionFilePath == "":
     raise IOError('"' + sessionFileName + '" is not exist.')
