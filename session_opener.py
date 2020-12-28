@@ -1,3 +1,5 @@
 from session import *
-sessionOpener()
+
+session = Session()
+session.open_session()
 input("Press enter to exit.")

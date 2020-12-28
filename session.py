@@ -1,82 +1,53 @@
+__all__ = ["Session"]
+
+from constants import *
 from selenium import webdriver
-from time import sleep
-import sys
-import os
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
-def sessionGenerator(browser=None,
-                     sessionDir=os.path.join(
-                         __file__[:__file__.rfind("share-web-whatsapp")],
-                         "share-web-whatsapp", "sessions"),
-                     sessionFileName="",
-                     shouldCloseBrowser=False):
-    shouldReturnBrowser = False
-    if browser == None:
-        shouldReturnBrowser = True
-        browser = webdriver.Chrome()
-    os.makedirs(sessionDir, exist_ok=True)
-    if sessionFileName == "":
-        n = len(os.listdir(sessionDir))
-        sessionFileName = "%02d" % (n) + ".wa"
-        while os.path.exists(sessionFileName):
-            n += 1
-            sessionFileName = "%02d" % (n) + ".wa"
-    if sessionFileName[-3:] != ".wa":
-        sessionFileName += ".wa"
-    browser.get("https://web.whatsapp.com/")
-    print("Waiting for QR code scan...")
-    while "WAToken1" not in browser.execute_script(
-            "return window.localStorage;"):
-        continue
-    sleep(5)
-    session = browser.execute_script("return window.localStorage;")
-    with open(os.path.join(sessionDir, sessionFileName), "w",
-              encoding="utf-8") as sessionFile:
-        sessionFile.write(str(session))
-    print("Your session file is saved to: " +
-          os.path.join("sessions", sessionFileName))
-    if shouldReturnBrowser and not shouldCloseBrowser:
-        return browser
-    browser.close()
+class Session:
+    def __init__(self):
+        self.browser = webdriver.Chrome()
+        self.browser.get("https://web.whatsapp.com/")
 
+    def generate_session(self):
+        sessionfilename = "session_file.wa"
+        print("Waiting for QR code scan", end="... ")
+        self._wait_for_presence_of_an_element(SELECTORS.MAIN_SEARCH_BAR)
+        print(f'{STRINGS.CHECK_CHAR} Done')
+        session = self.browser.execute_script(GET_SESSION)
+        with open(sessionfilename, 'w',
+                  encoding='utf-8') as sessionfile:
+            sessionfile.write(str(session))
+        print('Your session file is saved to: ' + sessionfilename)
+        self.browser.quit()
 
-def sessionOpener(browser=None,
-                  sessionDir=os.path.join(
-                      __file__[:__file__.rfind("share-web-whatsapp")],
-                      "share-web-whatsapp", "sessions"),
-                  sessionFileName="00.wa"):
-    shouldReturnBrowser = False
-    if sessionFileName[-3:] != ".wa":
-        sessionFileName += ".wa"
-    session = None
-    possible_paths = [
-        os.path.join(sessionDir, sessionFileName), sessionFileName
-    ]
-    possibleSessionFilePath = ""
-    for path in possible_paths:
-        if os.path.exists(path):
-            possibleSessionFilePath = path
-    if possibleSessionFilePath == "":
-        raise IOError('"' + sessionFileName + '" is not exist.')
-    with open(possibleSessionFilePath, "r", encoding="utf-8") as sessionFile:
+    def open_session(self):
+        sessionfilename = "session_file.wa"
+        session = None
+        with open(sessionfilename, "r", encoding="utf-8") as sessionfile:
+            try:
+                session = sessionfile.read()
+            except:
+                raise IOError('"' + sessionfilename + '" is invalid file.')
+        print("Injecting session", end="... ")
+        self._wait_for_presence_of_an_element(SELECTORS.QR_CODE)
+        self.browser.execute_script(
+            PUT_SESSION,
+            session,
+        )
+        self.browser.refresh()
+        self._wait_for_presence_of_an_element(SELECTORS.MAIN_SEARCH_BAR)
+        print(f'{STRINGS.CHECK_CHAR} Done')
+
+    def _wait_for_presence_of_an_element(self, selector):
+        element = None
         try:
-            session = eval(sessionFile.read())
+            element = WebDriverWait(self.browser, INTEGERS.DEFAULT_WAIT).until(
+                EC.presence_of_element_located(selector)
+            )
         except:
-            raise IOError('"' + possibleSessionFilePath + '" is invalid file.')
-    if browser == None:
-        shouldReturnBrowser = True
-        browser = webdriver.Chrome()
-    browser.get("https://web.whatsapp.com/")
-    sleep(1)
-    print("Injecting session...")
-    browser.execute_script(
-        """
-    var keys = Object.keys(arguments[0]);
-    var values = Object.values(arguments[0]);
-    for(i=0;i<keys.length;++i) window.localStorage.setItem(keys[i], values[i]);
-    """,
-        session,
-    )
-    browser.refresh()
-    if shouldReturnBrowser:
-        return browser
+            pass
+        finally:
+            return element

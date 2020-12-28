@@ -1,2 +1,4 @@
 from session import *
-sessionGenerator()
+
+session = Session()
+session.generate_session()

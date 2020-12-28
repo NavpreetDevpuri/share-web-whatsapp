@@ -1,2 +1,4 @@
-chromedriver.exe
-sessions
+session_file.wa
+*.wa
+venv
+.idea
