@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class Session:
     def __init__(self):
-        self.browser = webdriver.Chrome()
+        self.browser = webdriver.Chrome("./chromedriver")
         self.browser.get("https://web.whatsapp.com/")
 
     def generate_session(self):
